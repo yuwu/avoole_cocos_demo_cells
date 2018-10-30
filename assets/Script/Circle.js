@@ -17,6 +17,13 @@ var Circle = cc.Class({
     },
 
     /**
+     * @returns 坐标
+     */
+    getPosition: function(){
+		return cc.v2(this.x, this.y);
+    },
+    
+    /**
      * 设置圆的半径
      * @param  {number} radius 圆半径
      */
