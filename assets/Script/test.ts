@@ -32,7 +32,7 @@ export default class NewClass extends cc.Graphics {
 
         this.getComponentInChildren
 
-        
+        cc.PhysicsManager
     }
 
     // update (dt) {}

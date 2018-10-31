@@ -7,8 +7,6 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
-import Wheel from "./Wheel";
-import WorldRenderer from "./WorldRenderer";
 
 cc.Class({
     extends: cc.Component,
@@ -29,30 +27,15 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-        bgcolor: "#ffffff",
-        wheel: Wheel,
-        worldRenderer: WorldRenderer,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
-    onLoad () {
-        var self = this;
-        this.wheel.setOnWeelListener(function(type, vec2){
-            var world = self.worldRenderer.world;
-            //world.movePlayer(vec2);
-            world.update(0);
-        });
-        this.worldRenderer = this.getComponentInChildren(WorldRenderer);
-    },
+    // onLoad () {},
 
     start () {
-        //
+
     },
 
-    update (dt) {
-        var moveVec2 = this.wheel.getMoveVec2();
-        var world = this.worldRenderer.world;
-        world.movePlayer(moveVec2);
-    },
+    // update (dt) {},
 });

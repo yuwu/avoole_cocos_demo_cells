@@ -37,11 +37,13 @@ cc.Class({
         _bg: cc.Node,
         _move: cc.Node,
         _edgeCircle: Circle,
+        _moveVec2: cc.Vec2,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
+        this.moveVec2 = cc.Vec2.ZERO;
         this.bg = util.findNodeInChildren(this.node, 'bg');
         this.move = util.findNodeInChildren(this.node, 'move');
 
@@ -85,6 +87,7 @@ cc.Class({
     onTouchCancel: function(event){
         this.onTouchMove(event);
         this.move.setPosition(0, 0);
+        this.moveVec2 = cc.Vec2.ZERO;
     },
 
     setOnWeelListener: function(onWeelListener){
@@ -106,6 +109,11 @@ cc.Class({
         }
         this.move.setPosition(newVec2);
 
-        this.node.emit('onWeelListener', {type: event.getType(), vec2: newVec2});
-    }
+        this.moveVec2 = newVec2.clone();
+        this.node.emit('onWeelListener', {type: event.getType(), vec2: this.moveVec2});
+    },
+
+    getMoveVec2(){
+        return this.moveVec2;
+    },
 });

@@ -29,19 +29,28 @@ cc.Class({
         //         this._bar = value;
         //     }
         // },
-        wordWidth: 200,
-        wordHeight: 200,
+        wordWidth: 20,
+        wordHeight: 20,
+        world: World,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.world = new World();
-        this.world.setSize(this.wordWidth, this.wordHeight);
+        this.world = new World(this.wordWidth, this.wordHeight);
         this.world.start();
     },
 
     start () {
+
+        // var circle = gameObject.body;
+        // var radius = this.body.radius;
+
+        // var dx = this.x - circle.x;
+		// var dy = this.y - circle.y;
+        // var distance = dx * dx + dy * dy;
+        
+		// var radiusDiff = radius - circle.radius;
 
     },
 
@@ -59,19 +68,30 @@ cc.Class({
         // for(var i=0; i<heros.length; i++){
         //     this.renderer(heros[i]);
         // }
+        
+        //this.world.update(dt);
 
         var graphics = this.getGraphics();
+        graphics.clear();
 
-        var player = this.world.player;
-        player.setPosition(500, 500);
-        player.setHP(10000);
-        this.renderer(graphics, player);
+        // cells
+        var cells = this.world.cells;
+        for(var i=0; i<cells.length; i++){
+            this.renderer(graphics, cells[i]);
+        }
+
+        // players
+        var players = this.world.players;
+        for(var i=0; i<players.length; i++){
+            this.renderer(graphics, players[i]);
+        }
     },
 
     renderer: function(graphics, cell){
-        var pos = cell.getPosition();
-        graphics.clear();
-        graphics.circle(pos.x, pos.y, cell.getRadius());
+        var unit = this.world.unit;
+        var pos = this.world.convertToRendererSpace(cell.getPosition());
+        var radius = cell.getRadius() * unit;
+        graphics.circle(pos.x, pos.y, radius);
         graphics.fillColor = cell.color;
         graphics.fill();
     }

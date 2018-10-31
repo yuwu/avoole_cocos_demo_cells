@@ -4,7 +4,6 @@ import Circle from "./Circle";
 export default class GameObject {
     
     constructor() {
-        this.velocity = new cc.Vec2(0, 0);
         this.body = new Circle();
     }
     
@@ -19,10 +18,23 @@ export default class GameObject {
     }
     
     /**
+     * 内含
      * @param  {GameObject} gameObject
      */
     contains(gameObject){
-        return this.body.contains(gameObject.body);
+        var circle = gameObject.body;
+
+        var x = this.body.x;
+        var y = this.body.y;
+        var r = this.body.radius;
+
+        var dx = x - circle.x;
+		var dy = y - circle.y;
+        var distance = dx * dx + dy * dy;
+        
+        var radiusDiff = r - circle.radius;
+        
+		return distance < radiusDiff;
     }
     
     /**
@@ -30,13 +42,6 @@ export default class GameObject {
      */
     setPosition(vec2){
         this.body.setPosition(vec2.x, vec2.y);
-    }
-    
-    /**
-     * @param  {cc.Vec2} vec2
-     */
-    setPosition(x, y){
-        this.body.setPosition(x, y);
     }
 
     getPosition(){

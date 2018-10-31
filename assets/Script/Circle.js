@@ -46,7 +46,7 @@ var Circle = cc.Class({
 		var dx = this.x - circle.x;
 		var dy = this.y - circle.y;
 		var distance = dx * dx + dy * dy;
-		var radiusSum = radius + circle.radius;
+		var radiusSum = this.radius + circle.radius;
 		return distance < radiusSum * radiusSum;
     },
     
