@@ -1,51 +1,33 @@
-// Learn cc.Class:
-//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/class.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/class.html
+// Learn TypeScript:
+//  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/typescript.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/typescript.html
 // Learn Attribute:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/reference/attributes.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/reference/attributes.html
+//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/reference/attributes.html
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
-//  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
-var util = require('utils');
-var Circle = require('Circle');
-var Vector2 = require('Vector2');
+//  - [English] http://www.cocos2d-x.org/docs/creator/manual/en/scripting/life-cycle-callbacks.html
 
-cc.Class({
-    extends: cc.Component,
+const {ccclass, property} = cc._decorator;
+import Utils from "./Utils"
+import Circle from "./Circle"
 
-    properties: {
-        // foo: {
-        //     // ATTRIBUTES:
-        //     default: null,        // The default value will be used only when the component attaching
-        //                           // to a node for the first time
-        //     type: cc.SpriteFrame, // optional, default is typeof default
-        //     serializable: true,   // optional, default is true
-        // },
-        // bar: {
-        //     get () {
-        //         return this._bar;
-        //     },
-        //     set (value) {
-        //         this._bar = value;
-        //     }
-        // },
-        background: cc.Sprite,
-        move: cc.Sprite,
+@ccclass
+export default class Wheel extends cc.Component {
 
-        _radius: 0,
-        _bg: cc.Node,
-        _move: cc.Node,
-        _edgeCircle: Circle,
-        _moveVec2: cc.Vec2,
-    },
+    radius: number = 0;
+    bg: cc.Node;
+    move: cc.Node;
+    moveVec2: cc.Vec2;
+    edgeCircle: Circle;
+
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
         this.moveVec2 = cc.Vec2.ZERO;
-        this.bg = util.findNodeInChildren(this.node, 'bg');
-        this.move = util.findNodeInChildren(this.node, 'move');
+        this.bg = Utils.findNodeInChildren(this.node, 'bg');
+        this.move = Utils.findNodeInChildren(this.node, 'move');
 
         //this.radius = Math.max(bg.size.width, bg.size.height);
         //var bg = this.node.getChildByName("bg");
@@ -61,11 +43,11 @@ cc.Class({
         this.bg.on(cc.Node.EventType.TOUCH_MOVE, this.onTouchMove, this);
         this.bg.on(cc.Node.EventType.TOUCH_CANCEL, this.onTouchCancel, this);
         this.bg.on(cc.Node.EventType.TOUCH_END, this.onTouchCancel, this);
-    },
+    }
 
     onDestroy () {
-        this.node.off('onWeelListener', this.onWeelListener, this);
-    },
+        //this.node.off('onWeelListener', this.onWeelListener, this);
+    }
 
     start () {
         // // 按下点
@@ -74,30 +56,30 @@ cc.Class({
         // graphics.circle(newVec2.x, newVec2.y, 10);
         // graphics.fillColor = cc.Color.RED;
         // graphics.fill();
-    },
+    }
 
     update (dt) {
         
-    },
+    }
 
-    getGraphics: function(){
+    getGraphics (){
         return this.getComponentInChildren(cc.Graphics);
-    },
+    }
 
-    onTouchCancel: function(event){
+    onTouchCancel(event){
         this.onTouchMove(event);
         this.move.setPosition(0, 0);
         this.moveVec2 = cc.Vec2.ZERO;
-    },
+    }
 
-    setOnWeelListener: function(onWeelListener){
-        this.onWeelListener = function(event){
-            onWeelListener(event.detail.type, event.detail.vec2);
-        };
-        this.node.on('onWeelListener', this.onWeelListener, this);
-    },
+    setOnWeelListener(onWeelListener){
+        // this.onWeelListener = function(event){
+        //     onWeelListener(event.detail.type, event.detail.vec2);
+        // };
+        // this.node.on('onWeelListener', this.onWeelListener, this);
+    }
 
-    onTouchMove: function(event) {
+    onTouchMove (event) {
         var x = event.getLocationX();
         var y = event.getLocationY();
 
@@ -111,9 +93,9 @@ cc.Class({
 
         this.moveVec2 = newVec2.clone();
         this.node.emit('onWeelListener', {type: event.getType(), vec2: this.moveVec2});
-    },
+    }
 
     getMoveVec2(){
         return this.moveVec2;
-    },
-});
+    }
+}

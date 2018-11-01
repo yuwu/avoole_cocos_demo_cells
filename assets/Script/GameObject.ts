@@ -2,12 +2,14 @@
 import Circle from "./Circle";
 
 export default class GameObject {
+
+    body;
     
     constructor() {
         this.body = new Circle();
     }
     
-    getRadius(){
+    public getRadius(){
         return this.body.radius;
     }
 
@@ -44,11 +46,11 @@ export default class GameObject {
     /**
      * @param  {cc.Vec2} vec2
      */
-    setPosition(vec2){
+    public setPosition(vec2){
         this.body.setPosition(vec2.x, vec2.y);
     }
 
-    getPosition(){
+    public getPosition(){
         return this.body.getPosition();
     }
 }

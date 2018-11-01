@@ -7,11 +7,22 @@ import Cells from "./Cells";
 
 export default class World  {
 
+    private static instance: World = null;
+
+    player = null;
+    moveVec2 = cc.Vec2.ZERO;
+    players = [];
+    cells = [];
+    width = 0;
+    height= 0;
+
+    unit = 0;
+    colors = [];
+    
     static init(width, height) {
-        if (!World.instance) {
+        if (World.instance == null) {
             World.instance = new World(width, height);
         }
-        return World.instance;
     }
 
     static getInstance() {

@@ -7512,7 +7512,7 @@ declare module cc {
 		/** !#en The "handle" part of the scrollbar.
 		!#zh 作为当前滚动区域位置显示的滑块 Sprite。 */
 		handle: Sprite;		
-		/** !#en The direction of scrollbar.	
+		/** !#en The direction of scrollbar.
 		!#zh ScrollBar 的滚动方向。 */
 		direction: Scrollbar.Direction;		
 		/** !#en Whether enable auto hide or not.

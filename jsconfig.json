@@ -2,7 +2,6 @@
     "compilerOptions": {
         "target": "es6",
         "module": "commonjs",
-        //"checkJs": true,
         "experimentalDecorators": true
     },
     "exclude": [
@@ -11,6 +10,6 @@
         "library",
         "local",
         "settings",
-        "temp",
-    ],
+        "temp"
+    ]
 }

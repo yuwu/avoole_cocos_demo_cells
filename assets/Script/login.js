@@ -7,12 +7,7 @@
 // Learn life-cycle callbacks:
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
-
-var utils = require('utils');
-
-var util = new utils();
-
-utils.printfln();
+import Utils from "./Utils"
 
 cc.Class({
     extends: cc.Component,
@@ -94,7 +89,7 @@ cc.Class({
                 //editbox.placeholder = 'haha'
             }
             
-            var login = utils.findNodeInChildren(this.node, 'login');
+            var login = Utils.findNodeInChildren(this.node, 'login');
     
             login.on(cc.Node.EventType.MOUSE_UP, function (event) {
                 cc.log('MOUSE_UP');

@@ -1,54 +1,60 @@
 
-var Circle = cc.Class({
-    properties: {
-        x: 0,
-        y: 0,
-        radius: 0,
-    },
+
+export default class Circle {
+
+    constructor(){
+    }
+
+    public x: number = 0;
+
+    public y: number = 0;
+
+    public radius: number = 0;
+
 
     /**
      * 设置圆心的X和Y坐标
      * @param  {number} x X 坐标
      * @param  {number} y Y 坐标
      */
-    setPosition: function(x, y){
+    setPosition(x, y){
 		this.x = x;
 		this.y = y;
-    },
+    }
 
     /**
      * @returns 坐标
      */
-    getPosition: function(){
+    getPosition(){
 		return cc.v2(this.x, this.y);
-    },
+    }
     
     /**
      * 设置圆的半径
      * @param  {number} radius 圆半径
      */
-    setRadius: function(radius){
+    setRadius(radius){
 		this.radius = radius;
-    },
+    }
 
     /**
      * @returns 面积
      */
-    area: function(){
+    area(){
         return this.radius * this.radius * Math.PI;
-    },
+    }
     
     /**
      * 两圆是否重叠
      * @param  {Circle} circle
      */
-    overlaps: function(circle){
+    overlaps(circle){
 		var dx = this.x - circle.x;
 		var dy = this.y - circle.y;
 		var distance = dx * dx + dy * dy;
 		var radiusSum = this.radius + circle.radius;
 		return distance < radiusSum * radiusSum;
-    },
+    }
     
     /**
      * 检查这个圆是否包含给定的点。
@@ -56,25 +62,25 @@ var Circle = cc.Class({
      * @param  {number} y Y 坐标
      * @returns 如果这个圆包含给定的点，则为true。
      */
-    contains: function(x, y){
+    contains(x, y){
 		x = this.x - x;
 		y = this.y - y;
 		return x * x + y * y <= this.radius * this.radius;
-    },
+    }
     
     /**
      * @requires 返回这个圆的周长
      */
-    circumference: function(){
+    circumference(){
 		return this.radius * Math.PI * 2;
-    },
+    }
 
     /**
      * 指定一点与圆心组成一条直线，求这条直线与圆相交且与指定点距离最短的一点
      * @param {number} x 
      * @param {number} y 
      */
-    intersect: function(x, y){
+    intersect(x, y){
         //1. 求直线与圆相交的两点
         var a = this.x;
         var b = this.y;
@@ -124,9 +130,9 @@ var Circle = cc.Class({
         }
 
         return cc.v2(sX, sY);
-    },
+    }
 
-    getQuadrant: function(x, y){
+    getQuadrant(x, y){
         var a = this.x;
         var b = this.y;
         if(x >= a && y >=b){
@@ -140,6 +146,4 @@ var Circle = cc.Class({
         }
         return 0;
     }
-});
-
-module.exports = Circle;
+}

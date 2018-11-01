@@ -2,6 +2,10 @@ import GameObject from "./GameObject";
 
 export default class Cells extends GameObject {
 
+    id;
+    hp;
+    color;
+
     constructor(vec2, hp) {
         super();
         this.color = cc.Color.BLUE;
