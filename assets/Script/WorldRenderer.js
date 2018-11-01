@@ -31,14 +31,14 @@ cc.Class({
         // },
         wordWidth: 20,
         wordHeight: 20,
-        world: World,
     },
 
     // LIFE-CYCLE CALLBACKS:
 
     onLoad () {
-        this.world = new World(this.wordWidth, this.wordHeight);
-        this.world.start();
+        World.init(this.wordWidth, this.wordHeight);
+        this.world = World.getInstance();
+        World.getInstance().start();
     },
 
     start () {

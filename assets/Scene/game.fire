@@ -254,8 +254,7 @@
     },
     "_enabled": true,
     "wordWidth": 20,
-    "wordHeight": 20,
-    "world": null
+    "wordHeight": 20
   },
   {
     "__type__": "cc.Graphics",

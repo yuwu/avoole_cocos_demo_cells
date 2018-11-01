@@ -41,7 +41,7 @@ cc.Class({
         this.wheel.setOnWeelListener(function(type, vec2){
             var world = self.worldRenderer.world;
             //world.movePlayer(vec2);
-            world.update(0);
+            //world.update(0);
         });
         this.worldRenderer = this.getComponentInChildren(WorldRenderer);
     },
@@ -54,5 +54,7 @@ cc.Class({
         var moveVec2 = this.wheel.getMoveVec2();
         var world = this.worldRenderer.world;
         world.movePlayer(moveVec2);
+
+        world.update(dt);
     },
 });

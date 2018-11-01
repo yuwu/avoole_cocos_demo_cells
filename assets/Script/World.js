@@ -6,15 +6,27 @@ import Player from "./Player";
 import Cells from "./Cells";
 
 export default class World  {
+
+    static init(width, height) {
+        if (!World.instance) {
+            World.instance = new World(width, height);
+        }
+        return World.instance;
+    }
+
+    static getInstance() {
+        return World.instance;
+    }
     
     constructor(width, height) {
         this.player = new Player(cc.v2(5, 5), 2);
-        this.playerMoveVec2 = cc.Vec2.ZERO;
+        this.moveVec2 = cc.Vec2.ZERO;
         this.players = [];
         this.cells = [];
         this.setSize(width, height);
         this.unit = cc.winSize.width / 20;
         this.colors = [cc.Color.BLUE, cc.Color.ORANGE, cc.Color.GREEN, cc.Color.RED, cc.Color.YELLOW, cc.Color.CYAN, cc.Color.MAGENTA];
+        World.instance = this;
     }
 
    setSize(width, height){
@@ -23,7 +35,7 @@ export default class World  {
    }
 
    convertToRendererSpace(pos){
-       return pos.mulSelf(this.unit);
+       return pos.mul(this.unit);
    }
 
     start () {
@@ -33,7 +45,8 @@ export default class World  {
     }
 
     movePlayer(vec2){
-        if(vec2.x == 0 && vec2.y == 0) return;
+        this.moveVec2 = vec2;
+        //if(vec2.x == 0 && vec2.y == 0) return;
         this.player.move(vec2);
     }
 
@@ -146,7 +159,7 @@ export default class World  {
      * @param  {number} min
      * @param  {number} max
      */
-    range(value , min, max){
+    static range(value , min, max){
         return Math.min(Math.max(value, min), max);
     }
 }
