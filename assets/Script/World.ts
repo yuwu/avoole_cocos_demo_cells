@@ -4,6 +4,7 @@
 
 import Player from "./Player";
 import Cells from "./Cells";
+import Utils from "./Utils";
 
 export default class World  {
 
@@ -37,7 +38,7 @@ export default class World  {
         this.setSize(width, height);
         this.unit = cc.winSize.width / 20;
         this.colors = [cc.Color.BLUE, cc.Color.ORANGE, cc.Color.GREEN, cc.Color.RED, cc.Color.YELLOW, cc.Color.CYAN, cc.Color.MAGENTA];
-        World.instance = this;
+        
     }
 
    setSize(width, height){
@@ -140,9 +141,11 @@ export default class World  {
         
         // cells
         for(var i=0; i<100; i++){
-            var x = Math.random() * this.width;
-            var y = Math.random() * this.height;
-            
+            var x = Math.random() * (this.width-0.01);
+            var y = Math.random() * (this.height-0.01);
+
+            x = Utils.range(x, 0.01, this.width);
+
             var cell = new Cells(cc.v2(x, y), 0.5);
             cell.setColor(this.getRandomColor());
             this.cells.push(cell);

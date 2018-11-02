@@ -37,9 +37,7 @@ export default class GameObject {
         var radiusDiff = r - circle.radius;
         
         var success = distance < radiusDiff;
-        if(success){
-            cc.log("success:" + success);
-        }
+       
 		return success;
     }
     

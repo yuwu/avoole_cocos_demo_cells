@@ -10,6 +10,7 @@
 
 const {ccclass, property} = cc._decorator;
 import World from "./World";
+import Utils from "./Utils";
 
 @ccclass
 export default class WorldRenderer extends cc.Component {
@@ -22,6 +23,10 @@ export default class WorldRenderer extends cc.Component {
 
     @property(cc.Camera)
     public camera: cc.Camera = null;
+
+    @property(cc.Node)
+    public playerNode: cc.Node = null;
+
 
     constructor(){
         super();
@@ -77,6 +82,23 @@ export default class WorldRenderer extends cc.Component {
         for(var i=0; i<players.length; i++){
             this.renderer(graphics, players[i]);
         }
+    }
+
+    lateUpdate(){
+        // camera position
+        var world = World.getInstance();
+        var player = world.player;
+        var position = world.convertToRendererSpace(player.getPosition());
+        this.playerNode.position = position;
+
+        var size = this.node.getContentSize();
+
+        var worldSize = world.convertToRendererSpace(cc.v2(world.width, world.height));
+
+        var x = Utils.range(position.x, size.width/2, worldSize.x-size.width/2);
+        var y = Utils.range(position.y, size.height/2, worldSize.y-size.height/2);
+
+        this.camera.node.position = cc.v2(x, y);
     }
 
     renderer (graphics, cell){

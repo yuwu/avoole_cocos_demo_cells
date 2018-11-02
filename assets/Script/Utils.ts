@@ -27,10 +27,15 @@ export default class Utils {
         return x * x + y * y <= radius * radius;
     }
     
-    public static range(min, max, value) {
+    /**
+     * @param  {number} value
+     * @param  {number} min
+     * @param  {number} max
+     */
+    public static range(value , min, max){
         return Math.min(Math.max(value, min), max);
     }
-
+    
     public static findNode(node, name) {
         return node.getChildByName(name);
     }
