@@ -24,10 +24,6 @@ export default class WorldRenderer extends cc.Component {
     @property(cc.Camera)
     public camera: cc.Camera = null;
 
-    @property(cc.Node)
-    public playerNode: cc.Node = null;
-
-
     constructor(){
         super();
     }
@@ -89,7 +85,6 @@ export default class WorldRenderer extends cc.Component {
         var world = World.getInstance();
         var player = world.player;
         var position = world.convertToRendererSpace(player.getPosition());
-        this.playerNode.position = position;
 
         var size = this.node.getContentSize();
 
