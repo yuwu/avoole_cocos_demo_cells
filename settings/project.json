@@ -44,11 +44,7 @@
   "fit-height": true,
   "fit-width": false,
   "group-list": [
-    "default",
-    "game",
-    "bg",
-    "menu",
-    "test"
+    "default"
   ],
   "simulator-orientation": false,
   "simulator-resolution": {
@@ -56,5 +52,6 @@
     "width": 960
   },
   "use-customize-simulator": false,
-  "use-project-simulator-setting": false
+  "use-project-simulator-setting": false,
+  "start-scene": "current"
 }

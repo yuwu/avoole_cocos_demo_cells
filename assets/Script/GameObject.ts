@@ -6,6 +6,9 @@ export default class GameObject extends cc.Component {
 
     @property(Number)
     id:number = 0;
+
+    @property(cc.Vec2)
+    position: cc.Vec2;
     
     constructor() {
         super();
@@ -15,10 +18,10 @@ export default class GameObject extends cc.Component {
      * @param  {cc.Vec2} newPosition
      */
     public setPosition(newPosition: cc.Vec2) {
-        this.node.setPosition(newPosition);
+        this.position = newPosition;
     }
 
     public getPosition(){
-        return this.node.getPosition();
+        return this.position;
     }
 }

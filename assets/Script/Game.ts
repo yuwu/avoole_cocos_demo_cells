@@ -24,6 +24,22 @@ export default class Game extends cc.Component {
 
     @property(WorldRenderer)
     public worldRenderer: WorldRenderer;
+
+    @property(cc.SpriteFrame)
+    spriteFrames: cc.SpriteFrame[] = [];
+
+    @property(cc.Prefab)
+    cellsPrefab: cc.Prefab = null;
+
+    @property(cc.Prefab)
+    cellsSkin: cc.Prefab = null;
+
+    static instance: Game = null;
+
+    constructor(){
+        super();
+        Game.instance = this;
+    }
     
    onLoad () {
         var self = this;

@@ -1,4 +1,7 @@
 import GameObject from "./GameObject";
+import Game from "./Game";
+import World from "./World";
+import Utils from "./Utils";
 
 const {ccclass, property} = cc._decorator;
 @ccclass
@@ -21,7 +24,14 @@ export default class Cells extends GameObject {
         super();
     }
 
+    onLoad(){
+        this.setSkinPrefab(this.skinPrefab);
+        this.setHP(this.hp);
+        this.setColor(this.color);
+    }
+
     setSkinPrefab(skinPrefab: cc.Prefab){
+        if(skinPrefab == null) return;
         this.skinPrefab = this.skinPrefab;
         this.skin = cc.instantiate(skinPrefab);
         this.skin.parent = this.node;
@@ -32,12 +42,12 @@ export default class Cells extends GameObject {
      * @param  {GameObject} gameObject
      */
     contains(cells: Cells){
-        var x = this.node.position.x;
-        var y = this.node.position.y;
+        var x = this.position.x;
+        var y = this.position.y;
         var r = this.radius;
 
-        var dx = x - cells.node.position.x;
-		var dy = y - cells.node.position.y;
+        var dx = x - cells.position.x;
+		var dy = y - cells.position.y;
         var distance = dx * dx + dy * dy;
         
         var radiusDiff = r - cells.radius;
@@ -59,14 +69,28 @@ export default class Cells extends GameObject {
     setHP(hp){
         this.hp = hp;
         this.radius = Math.sqrt(this.hp/Math.PI);
-        //this.setSize(cc.size(this.radius, this.radius));
-        var size = cc.size(this.radius, this.radius);
-        var sprite = this.skin.getChildByName("sprite");
-        this.skin.setContentSize(size)
-        sprite.setContentSize(size)
+    }
+
+    public setContentSize(size: cc.Size) {
+        this.setContentSizes(this.node, size);
+    }
+
+    private setContentSizes(node: cc.Node, size: cc.Size) {
+        node.setContentSize(size);
+        var nodes = node.children;
+        for (var i = 0; i < nodes.length; ++i) {
+            this.setContentSizes(nodes[i], size);
+        }
     }
 
     addHP(hp){
         this.setHP(this.hp + hp);
+    }
+
+    updateState(world: World){
+        var unit = world.unit;
+        var position = this.position;
+        this.node.setPosition(cc.v2(position.x * unit, position.x * unit));
+        this.setContentSize(cc.size(this.radius * unit, this.radius * unit));
     }
 }
