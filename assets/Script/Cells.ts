@@ -1,21 +1,56 @@
 import GameObject from "./GameObject";
 
+const {ccclass, property} = cc._decorator;
+@ccclass
 export default class Cells extends GameObject {
 
-    id;
-    hp;
-    color;
+    @property(Number)
+    hp:number = 0;
 
-    constructor(vec2, hp) {
+    @property(cc.Color)
+    color = cc.Color.BLUE;
+
+    radius:number = 0;
+
+    @property(cc.Prefab)
+    skinPrefab: cc.Prefab = null;
+
+    skin:cc.Node = null;
+
+    constructor() {
         super();
-        this.color = cc.Color.BLUE;
-        this.id = 0;
-        this.setHP(hp);
-        this.setPosition(vec2);
+    }
+
+    setSkinPrefab(skinPrefab: cc.Prefab){
+        this.skinPrefab = this.skinPrefab;
+        this.skin = cc.instantiate(skinPrefab);
+        this.skin.parent = this.node;
+    }
+
+    /**
+     * 内含
+     * @param  {GameObject} gameObject
+     */
+    contains(cells: Cells){
+        var x = this.node.position.x;
+        var y = this.node.position.y;
+        var r = this.radius;
+
+        var dx = x - cells.node.position.x;
+		var dy = y - cells.node.position.y;
+        var distance = dx * dx + dy * dy;
+        
+        var radiusDiff = r - cells.radius;
+        
+        var success = distance < radiusDiff;
+       
+		return success;
     }
 
     setColor(color){
         this.color = color;
+        var sprite = this.skin.getChildByName("sprite");
+        sprite.color = this.color;
     }
     
     /**
@@ -23,16 +58,15 @@ export default class Cells extends GameObject {
      */
     setHP(hp){
         this.hp = hp;
-        var radius = Math.sqrt(this.hp/Math.PI);
-        this.body.setRadius(radius);
+        this.radius = Math.sqrt(this.hp/Math.PI);
+        //this.setSize(cc.size(this.radius, this.radius));
+        var size = cc.size(this.radius, this.radius);
+        var sprite = this.skin.getChildByName("sprite");
+        this.skin.setContentSize(size)
+        sprite.setContentSize(size)
     }
 
     addHP(hp){
-        this.hp += hp;
-        var radius = Math.sqrt(this.hp/Math.PI);
-        this.body.setRadius(radius);
-    }
-
-    reset() {
+        this.setHP(this.hp + hp);
     }
 }

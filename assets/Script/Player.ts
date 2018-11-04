@@ -1,12 +1,14 @@
 import Cells from "./Cells";
 import World from "./World";
 
+const {ccclass, property} = cc._decorator;
+@ccclass
 export default class Player extends Cells {
 
     velocity;
     
-    constructor(vec2, hp) {
-        super(vec2, hp);
+    constructor() {
+        super();
         this.velocity = new cc.Vec2(0.05, 0.05);
     }
 
@@ -19,7 +21,7 @@ export default class Player extends Cells {
         var pos = this.getPosition();
         pos = pos.add(v);
 
-        var playerRadius = this.getRadius();
+        var playerRadius = this.radius;
         var minMargin = playerRadius * (2/3);
         var maxMargin = playerRadius * (2/3);
         pos.x = World.range(pos.x, minMargin, world.width - maxMargin);

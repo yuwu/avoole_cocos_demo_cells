@@ -5,12 +5,14 @@
 import Player from "./Player";
 import Cells from "./Cells";
 import Utils from "./Utils";
+import CellsManager from "./CellsManager"
+import WorldRenderer from "./WorldRenderer"
 
 export default class World  {
 
     private static instance: World = null;
 
-    player = null;
+    player: Player = null;
     moveVec2 = cc.Vec2.ZERO;
     players = [];
     cells = [];
@@ -19,6 +21,8 @@ export default class World  {
 
     unit = 0;
     colors = [];
+
+    worldRenderer: WorldRenderer;
     
     static init(width, height) {
         if (World.instance == null) {
@@ -31,7 +35,7 @@ export default class World  {
     }
     
     constructor(width, height) {
-        this.player = new Player(cc.v2(5, 5), 2);
+        //this.player = new Player();
         this.moveVec2 = cc.Vec2.ZERO;
         this.players = [];
         this.cells = [];
@@ -51,8 +55,21 @@ export default class World  {
    }
 
     start () {
+        // this.player.setPosition(cc.v2(5, 5));
+        // this.player.setHP(2);
+        // this.player.setColor(this.getRandomColor());
+        // this.player.id = 1;
+        // this.player.node = this.worldRenderer.node;
+
+        this.player = new Player();
+        this.player.node = new cc.Node();
+        this.player.node.group = this.worldRenderer.node.group;
+        this.player.node.parent = this.worldRenderer.node;
+        this.player.setSkinPrefab(CellsManager.instance.cellsSkin);
+        this.player.setPosition(cc.v2(5*this.unit, 5*this.unit));
+        this.player.setHP(2);
         this.player.setColor(this.getRandomColor());
-        this.player.id = 1;
+
         this.createDemoWorld();
     }
 
@@ -77,10 +94,10 @@ export default class World  {
     }
 
     update(dt) {
-        this.sortPlayers();
+        //this.sortPlayers();
 
         // kill
-        this.checkKillCells();
+        //this.checkKillCells();
     }
 
     checkKillCells(){
@@ -146,8 +163,25 @@ export default class World  {
 
             x = Utils.range(x, 0.01, this.width);
 
-            var cell = new Cells(cc.v2(x, y), 0.5);
+            // var cell = new Cells();
+            // cell.setHP(0.5);
+            // cell.setPosition(cc.v2(x, y));
+            // cell.setColor(this.getRandomColor());
+            
+            // var cellNode = cc.instantiate(CellsManager.instance.cellsPrefab);
+            // cellNode.parent = this.worldRenderer.node;
+            // var cell = cellNode.getComponentInChildren(Cells);
+
+            var cell = new Cells();
+            cell.node = new cc.Node();
+            cell.node.parent = this.worldRenderer.node;
+            cell.node.group = this.worldRenderer.node.group;
+            cell.setSkinPrefab(CellsManager.instance.cellsSkin);
+            cell.setPosition(cc.v2(x*this.unit, y*this.unit));
+            cell.setHP(0.5);
             cell.setColor(this.getRandomColor());
+            //this.worldRenderer.node.addChild(c);
+
             this.cells.push(cell);
         }
 
@@ -157,13 +191,14 @@ export default class World  {
             var y = Math.random() * this.height;
             var hp = Math.random() * 5;
 
-            var player = new Player(cc.v2(x, y), hp);
-            player.setColor(this.getRandomColor());
-            this.players.push(player);
+            //var player = new Player(cc.v2(x, y), hp);
+            //player.setColor(this.getRandomColor());
+            //this.players.push(player);
         }
 
         // self
         this.players.push(this.player);
+
 
         this.sortPlayers();
     }

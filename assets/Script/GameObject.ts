@@ -1,54 +1,24 @@
 'use strict';
-import Circle from "./Circle";
 
-export default class GameObject {
+const {ccclass, property} = cc._decorator;
+@ccclass
+export default class GameObject extends cc.Component {
 
-    body;
+    @property(Number)
+    id:number = 0;
     
     constructor() {
-        this.body = new Circle();
-    }
-    
-    public getRadius(){
-        return this.body.radius;
-    }
-
-    /**
-     * 
-     */
-    reset() {
+        super();
     }
     
     /**
-     * 内含
-     * @param  {GameObject} gameObject
+     * @param  {cc.Vec2} newPosition
      */
-    contains(gameObject){
-        var circle = gameObject.body;
-
-        var x = this.body.x;
-        var y = this.body.y;
-        var r = this.body.radius;
-
-        var dx = x - circle.x;
-		var dy = y - circle.y;
-        var distance = dx * dx + dy * dy;
-        
-        var radiusDiff = r - circle.radius;
-        
-        var success = distance < radiusDiff;
-       
-		return success;
-    }
-    
-    /**
-     * @param  {cc.Vec2} vec2
-     */
-    public setPosition(vec2){
-        this.body.setPosition(vec2.x, vec2.y);
+    public setPosition(newPosition: cc.Vec2) {
+        this.node.setPosition(newPosition);
     }
 
     public getPosition(){
-        return this.body.getPosition();
+        return this.node.getPosition();
     }
 }

@@ -30,7 +30,9 @@ export default class WorldRenderer extends cc.Component {
 
     onLoad () {
         World.init(this.wordWidth, this.wordHeight);
-        World.getInstance().start();
+        var world = World.getInstance();
+        world.worldRenderer = this;
+        world.start();
     }
 
     start () {
@@ -62,22 +64,22 @@ export default class WorldRenderer extends cc.Component {
         
         //this.world.update(dt);
 
-        var world = World.getInstance();
+        // var world = World.getInstance();
 
-        var graphics = this.getGraphics();
-        graphics.clear();
+        // var graphics = this.getGraphics();
+        // graphics.clear();
 
-        // cells
-        var cells = world.cells;
-        for(var i=0; i<cells.length; i++){
-            this.renderer(graphics, cells[i]);
-        }
+        // // cells
+        // var cells = world.cells;
+        // for(var i=0; i<cells.length; i++){
+        //     this.renderer(graphics, cells[i]);
+        // }
 
-        // players
-        var players = world.players;
-        for(var i=0; i<players.length; i++){
-            this.renderer(graphics, players[i]);
-        }
+        // // players
+        // var players = world.players;
+        // for(var i=0; i<players.length; i++){
+        //     this.renderer(graphics, players[i]);
+        // }
     }
 
     lateUpdate(){

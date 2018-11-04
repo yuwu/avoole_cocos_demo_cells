@@ -27,6 +27,9 @@
       },
       {
         "__id__": 8
+      },
+      {
+        "__id__": 26
       }
     ],
     "_active": true,
@@ -82,7 +85,7 @@
       }
     ],
     "_active": true,
-    "_level": 0,
+    "_level": 1,
     "_components": [
       {
         "__id__": 5
@@ -207,7 +210,7 @@
     },
     "_enabled": true,
     "_cullingMask": 0,
-    "_clearFlags": 6,
+    "_clearFlags": 0,
     "_backgroundColor": {
       "__type__": "cc.Color",
       "r": 0,
@@ -680,7 +683,7 @@
     },
     "_children": [],
     "_active": true,
-    "_level": 0,
+    "_level": 1,
     "_components": [
       {
         "__id__": 21
@@ -780,7 +783,7 @@
       "r": 255,
       "g": 255,
       "b": 255,
-      "a": 255
+      "a": 0
     },
     "_depth": 1,
     "_zoomRatio": 1,
@@ -823,8 +826,8 @@
     },
     "_position": {
       "__type__": "cc.Vec3",
-      "x": 480.0000000000001,
-      "y": 320.00000000000006,
+      "x": 480,
+      "y": 320,
       "z": 0
     },
     "_scale": {
@@ -930,5 +933,160 @@
     "_zoomRatio": 1,
     "_targetTexture": null,
     "_id": "67K+mXMBpCzoQ6OfgM5ria"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "Game",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 1
+    },
+    "_children": [
+      {
+        "__id__": 27
+      }
+    ],
+    "_active": true,
+    "_level": 1,
+    "_components": [],
+    "_prefab": null,
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 211,
+      "g": 37,
+      "b": 37,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_position": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_scale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_rotationX": 0,
+    "_rotationY": 0,
+    "_quat": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_zIndex": 0,
+    "groupIndex": 0,
+    "_id": "31cUYyuZ9N7r1IWVVtXj7l"
+  },
+  {
+    "__type__": "cc.Node",
+    "_name": "CellsManager",
+    "_objFlags": 0,
+    "_parent": {
+      "__id__": 26
+    },
+    "_children": [],
+    "_active": true,
+    "_level": 2,
+    "_components": [
+      {
+        "__id__": 28
+      }
+    ],
+    "_prefab": null,
+    "_opacity": 255,
+    "_color": {
+      "__type__": "cc.Color",
+      "r": 226,
+      "g": 96,
+      "b": 96,
+      "a": 255
+    },
+    "_contentSize": {
+      "__type__": "cc.Size",
+      "width": 0,
+      "height": 0
+    },
+    "_anchorPoint": {
+      "__type__": "cc.Vec2",
+      "x": 0.5,
+      "y": 0.5
+    },
+    "_position": {
+      "__type__": "cc.Vec3",
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "_scale": {
+      "__type__": "cc.Vec3",
+      "x": 1,
+      "y": 1,
+      "z": 1
+    },
+    "_rotationX": 0,
+    "_rotationY": 0,
+    "_quat": {
+      "__type__": "cc.Quat",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "w": 1
+    },
+    "_skewX": 0,
+    "_skewY": 0,
+    "_zIndex": 0,
+    "groupIndex": 0,
+    "_id": "30p6gALCRJioWq532zxwNS"
+  },
+  {
+    "__type__": "241cdA5zopCAY32omVcL/hv",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 27
+    },
+    "_enabled": true,
+    "spriteFrames": [
+      {
+        "__uuid__": "2c69c6c2-3aba-4c50-9553-3f87cf087b54"
+      },
+      {
+        "__uuid__": "9d002bb3-0118-4e1c-860f-35e6f778fd19"
+      },
+      {
+        "__uuid__": "8e13f1d6-fe4d-43d1-9811-e2bb866ad77b"
+      },
+      {
+        "__uuid__": "3b9568b2-f07e-48df-9e74-0eef680cb6d4"
+      },
+      {
+        "__uuid__": "33fa33b7-25da-470a-99e6-99594e093d6b"
+      }
+    ],
+    "cellsPrefab": {
+      "__uuid__": "f9564730-868a-4926-88ff-48d427aae883"
+    },
+    "cellsSkin": {
+      "__uuid__": "9d65a542-d6ae-4abb-9214-7b5f85c4b453"
+    },
+    "_id": "33EoZjyiZDV5Cj6iYoo1kO"
   }
 ]

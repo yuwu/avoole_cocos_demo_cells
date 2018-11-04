@@ -29,6 +29,13 @@
       false,
       false,
       false
+    ],
+    [
+      false,
+      false,
+      false,
+      false,
+      false
     ]
   ],
   "design-resolution-height": 640,
@@ -40,7 +47,8 @@
     "default",
     "game",
     "bg",
-    "menu"
+    "menu",
+    "test"
   ],
   "simulator-orientation": false,
   "simulator-resolution": {
