@@ -18,7 +18,7 @@ export default class Player extends Cells {
         var world = World.getInstance();
 
         var v = vec2.normalize().scale(this.velocity);
-        var pos = this.getPosition();
+        var pos = this.getPosition().add(v);
 
         var playerRadius = this.radius;
         var minMargin = playerRadius * (2/3);

@@ -69,6 +69,11 @@ export default class Cells extends GameObject {
     setHP(hp){
         this.hp = hp;
         this.radius = Math.sqrt(this.hp/Math.PI);
+        this.node.zIndex = hp;
+    }
+
+    addHP(hp){
+        this.setHP(this.hp + hp);
     }
 
     public setContentSize(size: cc.Size) {
@@ -83,14 +88,13 @@ export default class Cells extends GameObject {
         }
     }
 
-    addHP(hp){
-        this.setHP(this.hp + hp);
-    }
-
     updateState(world: World){
-        var unit = world.unit;
-        var position = this.position;
-        this.node.setPosition(cc.v2(position.x * unit, position.x * unit));
-        this.setContentSize(cc.size(this.radius * unit, this.radius * unit));
+        // position
+        var position = world.convertToRendererSpace(this.position);
+        this.node.setPosition(position);
+
+        // content size
+        var size = world.convertToRendererSpace(cc.v2(this.radius * 2, this.radius * 2));
+        this.setContentSize(cc.size(size.x , size.y));
     }
 }

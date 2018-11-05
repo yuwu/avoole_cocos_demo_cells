@@ -514,8 +514,8 @@
       "__id__": 18
     },
     "_enabled": true,
-    "wordWidth": 20,
-    "wordHeight": 20,
+    "wordWidth": 50,
+    "wordHeight": 50,
     "camera": {
       "__id__": 20
     }

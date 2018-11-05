@@ -13,7 +13,6 @@ export default class World  {
     public static instance: World = null;
 
     player: Player = null;
-    moveVec2 = cc.Vec2.ZERO;
     players = [];
     cells = [];
     width = 0;
@@ -35,14 +34,11 @@ export default class World  {
     }
     
     constructor(width, height) {
-        //this.player = new Player();
-        this.moveVec2 = cc.Vec2.ZERO;
         this.players = [];
         this.cells = [];
         this.setSize(width, height);
         this.unit = cc.winSize.width / 20;
         this.colors = [cc.Color.BLUE, cc.Color.ORANGE, cc.Color.GREEN, cc.Color.RED, cc.Color.YELLOW, cc.Color.CYAN, cc.Color.MAGENTA];
-        
     }
 
    setSize(width, height){
@@ -61,16 +57,13 @@ export default class World  {
         // this.player.id = 1;
         // this.player.node = this.worldRenderer.node;
 
-        var x = Math.random() * (this.width-0.01);
-        var y = Math.random() * (this.height-0.01);
-
         this.player = new Player();
         this.player.node = new cc.Node("Player");
         this.player.node.group = this.worldRenderer.node.group;
         this.player.node.parent = this.worldRenderer.node;
         this.player.setSkinPrefab(Game.instance.cellsSkin);
-        this.player.setPosition(cc.v2(x, y));
-        this.player.setHP(12);
+        this.player.setPosition(cc.v2(5, 5));
+        this.player.setHP(2);
         this.player.setColor(this.getRandomColor());
         this.player.updateState(this);
 
@@ -85,11 +78,10 @@ export default class World  {
         // cell.updateState(this);
         // this.cells.push(cell);
 
-       this.createDemoWorld();
+        this.createDemoWorld();
     }
 
     movePlayer(vec2){
-        this.moveVec2 = vec2;
         this.player.move(vec2);
         this.player.updateState(this);
     }
@@ -104,15 +96,11 @@ export default class World  {
         }
     }
 
-    sortPlayers(){
-        this.players.sort(this.compareSort);
-    }
-
     update(dt) {
         //this.sortPlayers();
 
         // kill
-        //this.checkKillCells();
+        this.checkKillCells();
     }
 
     checkKillCells(){
@@ -125,6 +113,7 @@ export default class World  {
             if(player.contains(cell)){
                 player.addHP(cell.hp);
                 cells.splice(i, 1);
+                cell.node.destroy();
                 this.onKillCell(cell);
                 break;
             }
@@ -140,6 +129,7 @@ export default class World  {
             if(player.contains(_palyer)){
                 player.addHP(_palyer.hp);
                 players.splice(i, 1);
+                _palyer.node.destroy();
                 this.onKillPlayer(_palyer);
                 break;
             }
@@ -169,38 +159,19 @@ export default class World  {
 
     createDemoWorld() {
         // cells
-        for(var i=0; i<100; i++){
+        for(var i=0; i<500; i++){
             var x = Math.random() * (this.width-0.01);
             var y = Math.random() * (this.height-0.01);
 
-            //x = Utils.range(x, 0.01, this.width);
-
-            // var cell = new Cells();
-            // cell.setHP(0.5);
-            // cell.setPosition(cc.v2(x, y));
-            // cell.setColor(this.getRandomColor());
-            
-            // var cellNode = cc.instantiate(CellsManager.instance.cellsPrefab);
-            // cellNode.parent = this.worldRenderer.node;
-            // var cell = cellNode.getComponentInChildren(Cells);
+            x = Utils.range(x, 0.01, this.width);
 
             var cell = new Cells();
-            // cell.node = new cc.Node();
-            // cell.node.parent = this.worldRenderer.node;
-            // cell.node.group = this.worldRenderer.node.group;
-            // cell.setSkinPrefab(Game.instance.cellsSkin);
-            // cell.setPosition(cc.v2(x*this.unit, y*this.unit));
-            // cell.setHP(0.5);
-            // cell.setColor(this.getRandomColor());
-            // cell.updateState(this);
-
-           
             cell.node = new cc.Node();
             cell.node.group = this.worldRenderer.node.group;
             cell.node.parent = this.worldRenderer.node;
             cell.setSkinPrefab(Game.instance.cellsSkin);
             cell.setPosition(cc.v2(x, y));
-            cell.setHP(2);
+            cell.setHP(0.5);
             cell.setColor(this.getRandomColor());
             cell.updateState(this);
 
@@ -220,9 +191,6 @@ export default class World  {
 
         // self
         this.players.push(this.player);
-
-
-        this.sortPlayers();
     }
 
     /**
