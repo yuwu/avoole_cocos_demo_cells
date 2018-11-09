@@ -8,6 +8,7 @@
 //  - [Chinese] http://docs.cocos.com/creator/manual/zh/scripting/life-cycle-callbacks.html
 //  - [English] http://www.cocos2d-x.org/docs/creator/en/scripting/life-cycle-callbacks.html
 var PahoMQTT = require('./paho-mqtt.js');
+ var Client = require('./Client');
 
 cc.Class({
     extends: cc.Component,
@@ -41,23 +42,18 @@ cc.Class({
     start () {
         cc.log("Mqtt.start");
         //this.login(this.host, this.port, this.clientId);
-        this.loginWS(this.host, this.port, this.clientId);
+       // this.loginWS(this.host, this.port, this.clientId);
     },
 
     // update (dt) {},
 
     loginWS(host, port, clientId){
         var ws = new WebSocket("ws://" + host + ":" + port + "/ws");
+        //ws.binaryType = 'arraybuffer';
+
         ws.onopen = function (event) {
             cc.log("Send Text WS was opened.");
             ws.send("xxx Hello WebSocket, I'm a text message.");
-
-
-
-            this.schedule(function(){
-                ws.send("ping");
-
-            }, 1, true);
         };
         ws.onmessage = function (event) {
             cc.log("response text msg: " + event.data);
@@ -77,6 +73,45 @@ cc.Class({
         //         cc.log("WebSocket instance wasn't ready...");
         //     }
         // }, 3);
+        // var client = new Client();
+        // client.connect({uri: 'ws://exmple.com:8080/ws', keepAliveInterval:1});
+
+        // setInterval(function(){
+        //     cc.log("setInterval:");
+        // }, 1000);
     },
     
+    login(host, port, clientId){
+        // Create a client instance
+        var client = new PahoMQTT.Client(host, Number(port), clientId);
+
+        // set callback handlers
+        client.onConnectionLost = onConnectionLost;
+        client.onMessageArrived = onMessageArrived;
+
+        // connect the client
+        client.connect({onSuccess:onConnect});
+
+        // called when the client connects
+        function onConnect() {
+            // Once a connection has been made, make a subscription and send a message.
+            console.log("onConnect");
+            client.subscribe("World");
+            message = new PahoMQTT.Message("Hello");
+            message.destinationName = "World";
+            client.send(message);
+        }
+
+        // called when the client loses its connection
+        function onConnectionLost(responseObject) {
+            if (responseObject.errorCode !== 0) {
+                cc.log("onConnectionLost:"+responseObject.errorMessage);
+            }
+        }
+
+        // called when a message arrives
+        function onMessageArrived(message) {
+            cc.log("onMessageArrived:"+message.payloadString);
+        }
+    }
 });

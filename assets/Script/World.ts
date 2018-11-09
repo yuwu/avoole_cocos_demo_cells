@@ -7,6 +7,8 @@ import Cells from "./Cells";
 import Utils from "./Utils";
 import WorldRenderer from "./WorldRenderer"
 import Game from "./Game";
+import Socket from "./Socket";
+import App from "./App";
 
 export default class World  {
 
@@ -50,7 +52,70 @@ export default class World  {
        return pos.mul(this.unit);
    }
 
+   onmessage(event){
+   }
+
+   initWorldCells(world, objects){
+       var self = world;
+        for(var i=0; i<objects.length; i++){
+            //var x = Math.random() * (self.width-0.01);
+            //var y = Math.random() * (self.height-0.01);
+            //x = Utils.range(x, 0.01, self.width);
+
+            var obj = objects[i];
+            var x = obj.position.x;
+            var y = obj.position.y;
+
+            cc.log("websocket.onmessage. x:" + x + " y:" + y);
+
+            var cell = new Cells();
+            cell.id = obj.id;
+            cell.node = new cc.Node();
+            cell.node.group = self.worldRenderer.node.group;
+            cell.node.parent = self.worldRenderer.node;
+            cell.setSkinPrefab(Game.instance.cellsSkin);
+            cell.setPosition(cc.v2(x, y));
+            cell.setHP(0.5);
+            cell.setColor(self.getRandomColor());
+            cell.updateState(self);
+
+            self.cells.push(cell);
+        }
+   }
+
     start () {
+        var self = this;
+        cc.director.on("websocket.onmessage", function(event){
+            //cc.log("websocket.onmessage. " + event.detail);
+
+            var text = event.detail;
+            var message = JSON.parse(text);
+            var type = message.type;
+
+            //socket.sendText('{"id":"0","type":6,"payload":{}}');
+            //cc.log("websocket.onmessage. type " + type);
+
+            switch(type){ 
+                // World
+                case 6:
+                // width"
+                // height
+                // cells
+                // players
+                var world = message.payload;
+                var width = world.width;
+                var height = world.height;
+                var cells = world.cells;
+                var players = world.players;
+
+                self.initWorldCells(self, cells);
+                break;
+                default:
+                break;
+            }
+        });
+        App.socket.sendText('{"id":"0","type":6,"payload":{}}');
+
         // this.player.setPosition(cc.v2(5, 5));
         // this.player.setHP(2);
         // this.player.setColor(this.getRandomColor());
@@ -67,6 +132,9 @@ export default class World  {
         this.player.setColor(this.getRandomColor());
         this.player.updateState(this);
 
+        // self
+        this.players.push(this.player);
+
         // var cell = new Cells();
         // cell.node = new cc.Node("cell");
         // cell.node.group = this.worldRenderer.node.group;
@@ -78,12 +146,25 @@ export default class World  {
         // cell.updateState(this);
         // this.cells.push(cell);
 
-        this.createDemoWorld();
+        //this.createDemoWorld();
     }
 
     movePlayer(vec2){
+        if(vec2.x == 0 && vec2.y == 0) return;
+
         this.player.move(vec2);
         this.player.updateState(this);
+
+        var p = this.player;
+        var data = {
+            id: p.id,
+            position:{
+                x: p.position.x, 
+                y: p.position.y
+            }
+        };
+        var payload = JSON.stringify(data);
+        App.socket.sendText('{"id":"0","type":8,"payload":'+payload+'}');
     }
 
     compareSort(cell1, cell2){

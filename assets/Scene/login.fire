@@ -1040,7 +1040,7 @@
     "_enabled": true,
     "clientId": "1",
     "host": "192.168.10.109",
-    "port": "443",
+    "port": "1883",
     "uname": "blabla@gmail.com",
     "upassword": "123456"
   },

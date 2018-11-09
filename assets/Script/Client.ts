@@ -16,10 +16,6 @@ export default class Client {
     socket: WebSocket = null;
     sendPinger;
     connectOptions;
-
-    constructor(){
-        
-    }
     
     /**
 	 * Repeat keepalive requests, monitor responses.

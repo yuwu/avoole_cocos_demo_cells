@@ -10,7 +10,10 @@
 
 const {ccclass, property} = cc._decorator;
 
-import Mqtt from "./Mqtt"
+import App from "./App"
+import Socket from "./Socket";
+import Game from "./Game";
+import World from "./World";
 
 @ccclass
 export default class login extends cc.Component {
@@ -31,7 +34,6 @@ export default class login extends cc.Component {
     upassword: string = "123456";
 
     onLoad () {
-        
     }
 
     start () {
@@ -64,14 +66,58 @@ export default class login extends cc.Component {
             login.on(cc.Node.EventType.MOUSE_DOWN, function (event) {
                 cc.log('Mouse down');
                 //self.node.getComponentInChildren(mqtt);
-
                 //var mq = new mqtt();
-                new Mqtt().login(self.host, Number(self.port), self.clientId);
+                //new Mqtt().login(self.host, Number(self.port), self.clientId);
+                self.login();
             });
         
         } catch (error) {
             cc.error(error.toString())
         }
+    }
+
+    login(){
+        var app = App.getInstance();
+        var socket = new Socket();
+        window['socket'] = socket;
+
+        cc.director.on("websocket.onopen", function(){
+            cc.log("websocket.onopen.on");
+            // 连接认证
+            socket.sendText('{"id":"0","type":1,"payload":{}}');
+        });
+
+        cc.director.on("websocket.onmessage", function(event){
+
+            var text = event.detail;
+            var message = JSON.parse(text);
+            var type = message.type;
+
+            //socket.sendText('{"id":"0","type":6,"payload":{}}');
+            //cc.log("websocket.onmessage. type " + type);
+
+            switch(type){ 
+                // Connack
+                case 2:
+                    cc.log("连接成功");
+                    // 连接成功
+                    App.socket = socket;
+                    //socket.sendText('{"id":"0","type":6,"payload":{}}');
+                    cc.director.loadScene("game");
+                break;
+                // Disconnect
+                case 3:
+                break;
+                // World
+                case 6:
+
+                break;
+                default:
+                break;
+            }
+        });
+
+        socket.connect(this.host, Number(this.port));
     }
 
     // update (dt) {}
