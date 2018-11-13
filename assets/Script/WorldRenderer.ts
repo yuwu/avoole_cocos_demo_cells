@@ -86,6 +86,8 @@ export default class WorldRenderer extends cc.Component {
         // camera position
         var world = World.getInstance();
         var player = world.player;
+        if(player == null) return;
+        
         var position = world.convertToRendererSpace(player.getPosition());
 
         var size = this.node.getContentSize();

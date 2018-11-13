@@ -14,6 +14,7 @@ export default class World  {
 
     public static instance: World = null;
 
+    clientId:string = null;
     player: Player = null;
     players = [];
     cells = [];
@@ -52,24 +53,78 @@ export default class World  {
        return pos.mul(this.unit);
    }
 
+   createPlayer(self:World, client:string, nickname:string=""){
+        var x = Math.random() * (self.width-0.01);
+        var y = Math.random() * (self.height-0.01);
+
+        x = Utils.range(x, 0.01, self.width);
+
+        var player = {
+            id: client,
+            position:{
+                x: x, 
+                y: y,
+            },
+            nickname: nickname,
+            velocity: {
+                x: 0.5,
+                y: 0.5,
+            },
+            hp: 2,
+        };
+
+        return player;
+    }
+
    onmessage(event){
    }
 
-   initWorldCells(world, objects){
-       var self = world;
+   onMessagePlayerJoin(self, data){
+        var x = data.position.x;
+        var y = data.position.y;
+        var hp = data.hp;
+        var velocity = cc.v2(data.velocity.x, data.velocity.y);
+        
+        var player = new Player();
+        player.id = data.id;
+        player.node = new cc.Node("Player");
+        player.node.group = self.worldRenderer.node.group;
+        player.node.parent = self.worldRenderer.node;
+        player.setSkinPrefab(Game.instance.cellsSkin);
+        player.setPosition(cc.v2(x, y));
+        player.setHP(hp);
+        player.setColor(self.getRandomColor());
+        player.updateState(self);
+
+        if(data.id == self.clientId){
+            self.player = player;
+        }
+        
+        self.players.push(player);
+
+        cc.log("players:" + self.players.length);
+        return player;
+   }
+
+   onMessageWorldPlayers(self, objects){
+        for(var i=0; i<objects.length; i++){
+            self.onMessagePlayerJoin(self, objects[i]);
+        }
+   }
+
+   onMessageWorldCells(self, objects){
         for(var i=0; i<objects.length; i++){
             //var x = Math.random() * (self.width-0.01);
             //var y = Math.random() * (self.height-0.01);
             //x = Utils.range(x, 0.01, self.width);
 
             var obj = objects[i];
+            var id = obj.id;
             var x = obj.position.x;
             var y = obj.position.y;
 
-            cc.log("websocket.onmessage. x:" + x + " y:" + y);
-
             var cell = new Cells();
-            cell.id = obj.id;
+            cell.id = id;
             cell.node = new cc.Node();
             cell.node.group = self.worldRenderer.node.group;
             cell.node.parent = self.worldRenderer.node;
@@ -81,7 +136,20 @@ export default class World  {
 
             self.cells.push(cell);
         }
-   }
+    }
+
+    onMessageCellDeath(self, data){
+        var cells = self.cells;
+        for(var i=0; i<cells.length; i++){
+            var cell = cells[i];
+            if(cell.id == data.id){
+                cells.splice(i, 1);
+                cell.node.destroy();
+                break;
+            }
+        }
+    }
+
 
     start () {
         var self = this;
@@ -96,61 +164,49 @@ export default class World  {
             //cc.log("websocket.onmessage. type " + type);
 
             switch(type){ 
-                // World
-                case 6:
+                case 6:// World
                 // width"
                 // height
                 // cells
                 // players
                 var world = message.payload;
+                var client = world.client;
                 var width = world.width;
                 var height = world.height;
                 var cells = world.cells;
                 var players = world.players;
 
-                self.initWorldCells(self, cells);
+                // cells
+                self.onMessageWorldCells(self, cells);
+
+                // 其他玩家
+                self.onMessageWorldPlayers(self, players);
+
+                // 当前玩家加入
+                self.clientId = client;
+                
+                var newplayer = self.createPlayer(self, client, "cocos");
+                var payload = JSON.stringify(newplayer);
+                App.socket.sendText('{"id":"0","type":7,"payload":' + payload +'}');
+                break;
+                case 7://PlayerJoin
+        
+                cc.log("PlayerJoin 1");
+
+                var player = message.payload;
+                self.onMessagePlayerJoin(self, player);
+                //cc.log("PlayerJoin:" + player);
                 break;
                 default:
                 break;
             }
         });
+        
         App.socket.sendText('{"id":"0","type":6,"payload":{}}');
-
-        // this.player.setPosition(cc.v2(5, 5));
-        // this.player.setHP(2);
-        // this.player.setColor(this.getRandomColor());
-        // this.player.id = 1;
-        // this.player.node = this.worldRenderer.node;
-
-        this.player = new Player();
-        this.player.node = new cc.Node("Player");
-        this.player.node.group = this.worldRenderer.node.group;
-        this.player.node.parent = this.worldRenderer.node;
-        this.player.setSkinPrefab(Game.instance.cellsSkin);
-        this.player.setPosition(cc.v2(5, 5));
-        this.player.setHP(2);
-        this.player.setColor(this.getRandomColor());
-        this.player.updateState(this);
-
-        // self
-        this.players.push(this.player);
-
-        // var cell = new Cells();
-        // cell.node = new cc.Node("cell");
-        // cell.node.group = this.worldRenderer.node.group;
-        // cell.node.parent = this.worldRenderer.node;
-        // cell.setSkinPrefab(Game.instance.cellsSkin);
-        // cell.setPosition(cc.v2(4,4));
-        // cell.setHP(4);
-        // cell.setColor(this.getRandomColor());
-        // cell.updateState(this);
-        // this.cells.push(cell);
-
-        //this.createDemoWorld();
     }
 
     movePlayer(vec2){
-        if(vec2.x == 0 && vec2.y == 0) return;
+        if((vec2.x == 0 && vec2.y == 0 ) || (this.player == null)) return;
 
         this.player.move(vec2);
         this.player.updateState(this);
@@ -161,10 +217,18 @@ export default class World  {
             position:{
                 x: p.position.x, 
                 y: p.position.y
-            }
+            },
+            nickname: p.nickname,
+            velocity: {
+                x: p.velocity.x, 
+                y: p.velocity.y
+            },
+            hp: p.hp,
         };
         var payload = JSON.stringify(data);
         App.socket.sendText('{"id":"0","type":8,"payload":'+payload+'}');
+       
+        //cc.log("movePlayer length:" + this.players.length);
     }
 
     compareSort(cell1, cell2){
@@ -185,8 +249,11 @@ export default class World  {
     }
 
     checkKillCells(){
+        if(this.player == null) return;
+
         var player = this.player;
 
+        
         // cells
         var cells = this.cells;
         for(var i=0; i<cells.length; i++){
@@ -222,56 +289,25 @@ export default class World  {
      * @param  {Cells} cell
      */
     onKillCell(cell){
-
+        var data = {
+            id: cell.id,
+        };
+        // var payload = JSON.stringify(data);
+        //App.socket.sendText('{"id":"0","type":8,"payload":{"id":"'+ cell.id +'"}}');
+        App.socket.sendText('{"id":"0","type":11,"payload":{"id":"'+cell.id+'"}');
     }
 
     /**
      * 杀死其他玩家
      * @param  {Player} otherPlayer
      */
-    onKillPlayer(otherPlayer){
-
+    onKillPlayer(player){
+        App.socket.sendText('{"id":"0","type":9,"payload":{"id":'+player.id+'}');
     }
 
     getRandomColor(){
         var index = Math.floor(Math.random() * (this.colors.length-1));
         return this.colors[index];
-    }
-
-    createDemoWorld() {
-        // cells
-        for(var i=0; i<500; i++){
-            var x = Math.random() * (this.width-0.01);
-            var y = Math.random() * (this.height-0.01);
-
-            x = Utils.range(x, 0.01, this.width);
-
-            var cell = new Cells();
-            cell.node = new cc.Node();
-            cell.node.group = this.worldRenderer.node.group;
-            cell.node.parent = this.worldRenderer.node;
-            cell.setSkinPrefab(Game.instance.cellsSkin);
-            cell.setPosition(cc.v2(x, y));
-            cell.setHP(0.5);
-            cell.setColor(this.getRandomColor());
-            cell.updateState(this);
-
-            this.cells.push(cell);
-        }
-
-        // other player
-        for(var i=0; i<5; i++){
-            var x = Math.random() * this.width;
-            var y = Math.random() * this.height;
-            var hp = Math.random() * 5;
-
-            //var player = new Player(cc.v2(x, y), hp);
-            //player.setColor(this.getRandomColor());
-            //this.players.push(player);
-        }
-
-        // self
-        this.players.push(this.player);
     }
 
     /**

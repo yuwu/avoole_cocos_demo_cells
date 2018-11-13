@@ -6,6 +6,7 @@ const {ccclass, property} = cc._decorator;
 export default class Player extends Cells {
 
     velocity: cc.Vec2;
+    nickname:string = "";
     
     constructor() {
         super();
