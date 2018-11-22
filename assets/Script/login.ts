@@ -22,7 +22,7 @@ export default class login extends cc.Component {
     clientId: string = "1";
 
     @property(String)
-    host: string = "192.168.10.109";
+    host: string = "192.168.1.100";
 
     @property(String)
     port: string = "1883";

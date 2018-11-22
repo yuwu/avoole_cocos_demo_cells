@@ -79,6 +79,25 @@ export default class World  {
    onmessage(event){
    }
 
+   onMessagePlayerUpdate(self, data){
+        var players = this.players;
+        for(var i=0; i<players.length; i++){
+            var _palyer:Player = players[i];
+            if(self.player != null && data.id == self.player.id){
+                continue;
+            }
+
+            if(data.id == _palyer.id){
+                var position = _palyer.getPosition();
+                position.x = data.position.x;
+                position.y = data.position.y;
+                _palyer.setHP(data.hp);
+                _palyer.updateState(self);
+                break;
+            }
+        };
+   }
+
    onMessagePlayerJoin(self, data){
         var x = data.position.x;
         var y = data.position.y;
@@ -176,6 +195,9 @@ export default class World  {
                 var cells = world.cells;
                 var players = world.players;
 
+                // world
+                self.setSize(width, height);
+
                 // cells
                 self.onMessageWorldCells(self, cells);
 
@@ -191,10 +213,15 @@ export default class World  {
                 break;
                 case 7://PlayerJoin
         
-                cc.log("PlayerJoin 1");
+                cc.log("PlayerJoin ");
 
                 var player = message.payload;
                 self.onMessagePlayerJoin(self, player);
+                //cc.log("PlayerJoin:" + player);
+                break;
+                case 8://PlayerUpdate
+                var player = message.payload;
+                self.onMessagePlayerUpdate(self, player);
                 //cc.log("PlayerJoin:" + player);
                 break;
                 default:
@@ -294,7 +321,7 @@ export default class World  {
         };
         // var payload = JSON.stringify(data);
         //App.socket.sendText('{"id":"0","type":8,"payload":{"id":"'+ cell.id +'"}}');
-        App.socket.sendText('{"id":"0","type":11,"payload":{"id":"'+cell.id+'"}');
+        App.socket.sendText('{"id":"0","type":11,"payload":{"id":"'+cell.id+'"}}');
     }
 
     /**
@@ -302,7 +329,7 @@ export default class World  {
      * @param  {Player} otherPlayer
      */
     onKillPlayer(player){
-        App.socket.sendText('{"id":"0","type":9,"payload":{"id":'+player.id+'}');
+        App.socket.sendText('{"id":"0","type":9,"payload":{"id":'+player.id+'}}');
     }
 
     getRandomColor(){
